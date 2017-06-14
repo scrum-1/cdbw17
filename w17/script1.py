@@ -1,111 +1,49 @@
-import sys
-import time
-import traceback
-import javascript
+from browser import document
+import math
+# 準備繪圖畫布
+canvas = document["canvas1"]
+ctx = canvas.getContext("2d")
 
-from browser import document as doc, window, alert
+def axises(ctx):
+    ctx.beginPath()
+    # 設定線的寬度為 5 個單位
+    ctx.lineWidth = 5
+    # 將畫筆移動到 (0, 0) 座標點
+    ctx.moveTo(0, 0)
+    # 然後畫直線到 (100, 0) 座標點
+    ctx.strokeStyle = "red"
+    ctx.lineTo(100, 0)
+    ctx.lineTo(90, 10)
+    ctx.stroke()
+    ctx.closePath()
 
-has_ace = True
-try:
-    editor = window.ace.edit("editor")
-    session = editor.getSession()
-    session.setMode("ace/mode/python")
+    ctx.beginPath()
+    # 畫右上左下的斜線
+    ctx.moveTo(0, 0)
+    ctx.strokeStyle = "green"
+    ctx.lineTo(0, 100)
+    ctx.lineTo(10, 90)
+    # 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+    #ctx.strokeStyle = "blue"
+    # 實際執行畫線
+    ctx.stroke()
+    ctx.closePath()
 
-    editor.setOptions({
-     'enableLiveAutocompletion': True,
-     'enableSnippets': True,
-     'highlightActiveLine': False,
-     'highlightSelectedWord': True
-    })
-except:
-    from browser import html
-    editor = html.TEXTAREA(rows=20, cols=70)
-    doc["editor"] <= editor
-    def get_value(): return editor.value
-    def set_value(x):editor.value = x
-    editor.getValue = get_value
-    editor.setValue = set_value
-    has_ace = False
-
-if hasattr(window, 'localStorage'):
-    from browser.local_storage import storage
-else:
-    storage = None
-
-def reset_src():
-    if storage is not None and "py_src" in storage:
-        editor.setValue(storage["py_src"])
-    else:
-        editor.setValue('for i in range(10):\n\tprint(i)')
-    editor.scrollToRow(0)
-    editor.gotoLine(0)
-
-def reset_src_area():
-    if storage and "py_src" in storage:
-        editor.value = storage["py_src"]
-    else:
-        editor.value = 'for i in range(10):\n\tprint(i)'
-
-class cOutput:
-
-    def __init__(self,target):
-        self.target = doc[target]
-    def write(self,data):
-        self.target.value += str(data)
-        
-
-#if "console" in doc:
-sys.stdout = cOutput("console")
-sys.stderr = cOutput("console")
-
-def to_str(xx):
-    return str(xx)
-
-info = sys.implementation.version
-doc['version'].text = 'Brython %s.%s.%s' % (info.major, info.minor, info.micro)
-
-output = ''
-
-def show_console(ev):
-    doc["console"].value = output
-    doc["console"].cols = 60
-    doc["console"].rows = 10
-
-# load a Python script
-def load_script(evt):
-    _name = evt.target.value + '?foo=%s' % time.time()
-    editor.setValue(open(_name).read())
-
-# run a script, in global namespace if in_globals is True
-def run(*args):
-    global output
-    doc["console"].value = ''
-    src = editor.getValue()
-    if storage is not None:
-       storage["py_src"] = src
-
-    t0 = time.perf_counter()
-    try:
-        #ns = {'__name__':'__main__'}
-        ns = {'__name__':'editor'}
-        exec(src, ns)
-        state = 1
-    except Exception as exc:
-        traceback.print_exc(file=sys.stderr)
-        state = 0
-    output = doc["console"].value
-
-    print('<completed in %6.2f ms>' % ((time.perf_counter() - t0) * 1000.0))
-    return state
-
-if has_ace:
-    reset_src()
-else:
-    reset_src_area()
-    
-def clear_console(ev):
-    doc["console"].value = ""
-
-doc['run'].bind('click',run)
-doc['show_console'].bind('click',show_console)
-doc['clear_console'].bind('click',clear_console)
+axises(ctx)
+# 以下可以利用 ctx 物件進行畫圖
+# 先畫一條直線
+ctx.beginPath()
+# 設定線的寬度為 1 個單位
+ctx.lineWidth = 1
+# 將畫筆移動到 (100, 100) 座標點
+ctx.moveTo(100, 100)
+# 然後畫直線到 (150, 200) 座標點
+ctx.lineTo(150, 200)
+# 畫右上左下的斜線
+ctx.moveTo(150, 100)
+ctx.lineTo(100, 200)
+# 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+ctx.strokeStyle = "blue"
+# 實際執行畫線
+ctx.stroke()
+ctx.closePath()
