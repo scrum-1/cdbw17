@@ -1,8 +1,10 @@
 from browser import document
 import math
 # 準備繪圖畫布
+'''
 canvas = document["canvas1"]
 ctx = canvas.getContext("2d")
+'''
 
 def axises(ctx):
     ctx.beginPath()
@@ -28,7 +30,7 @@ def axises(ctx):
     # 實際執行畫線
     ctx.stroke()
     ctx.closePath()
-
+'''
 axises(ctx)
 # 以下可以利用 ctx 物件進行畫圖
 # 先畫一條直線
@@ -47,3 +49,4 @@ ctx.strokeStyle = "blue"
 # 實際執行畫線
 ctx.stroke()
 ctx.closePath()
+'''
